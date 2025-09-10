@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Add, Close } from "@mui/icons-material";
 import { Path } from "../../utils";
 import { Chip, FormControl, Input, InputAdornment, Tooltip } from "@mui/material";
@@ -8,6 +8,7 @@ import { FiFilter } from "react-icons/fi";
 import CreateUser from "./CreateEmployee";
 import Filter from "./Filter";
 import { searchUserReducer } from "../../redux/reducer/user";
+import CreateClient from "./CreateClient.jsx";
 
 const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
 
@@ -25,6 +26,7 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
   ///////////////////////////////////////// STATES ///////////////////////////////////////////////////
   const [open, setOpen] = useState(false);
   const [openFilters, setOpenFilters] = useState(false);
+  const [openCreateClientModal, setOpenCreateClientModal] = useState(false);
   const [scroll, setScroll] = useState("paper");
 
   ///////////////////////////////////////// USE EFFECTS ///////////////////////////////////////////////////
@@ -45,8 +47,13 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
     setOpenFilters((pre) => !pre);
   };
 
-  const handleCreateopen = (scrollType) => () => {
+  const handleCreateOpen = (scrollType) => () => {
     setOpen(true);
+    setScroll(scrollType);
+  };
+
+  const handleOpenCreateClientModal = (scrollType) => {
+    setOpenCreateClientModal(true);
     setScroll(scrollType);
   };
 
@@ -94,7 +101,7 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
             </Tooltip>
             <div>
               <Tooltip title="Add New Employee" placement="top" arrow>
-                <div onClick={handleCreateopen("body")}>
+                <div onClick={handleCreateOpen("body")}>
                   <button className="bg-primary-red hover:bg-red-400 transition-all text-white w-[44px] h-[44px] flex justify-center items-center rounded-full shadow-xl">
                     <Add />
                   </button>
@@ -105,26 +112,35 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
         )}
 
         {showClientTopBar && showCreatePageTopBar && (
-          <div className="flex items-center gap-2">
-            <div className="bg-[#ebf2f5] hover:bg-[#dfe6e8] p-1 pl-2 pr-2 rounded-md w-auto">
-              <FormControl>
-                <Input
-                  name="search"
-                  fullWidth="true"
-                  placeholder="Search Clients"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <PiMagnifyingGlass className="text-[25px]" />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
+            <div className="flex items-center gap-2">
+              <div className="bg-[#ebf2f5] hover:bg-[#dfe6e8] p-1 pl-2 pr-2 rounded-md w-auto">
+                <FormControl>
+                  <Input
+                      name="search"
+                      fullWidth="true"
+                      placeholder="Search Clients"
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <PiMagnifyingGlass className="text-[25px]"/>
+                        </InputAdornment>
+                      }
+                  />
+                </FormControl>
+              </div>
+              <Tooltip title="Add New Client" placement="top" arrow>
+                <div onClick={() => handleOpenCreateClientModal("body")}>
+                  <button
+                      className="bg-primary-red hover:bg-red-400 transition-all text-white w-[44px] h-[44px] flex justify-center items-center rounded-full shadow-xl">
+                    <Add/>
+                  </button>
+                </div>
+              </Tooltip>
             </div>
-          </div>
         )}
       </div>
-      <CreateUser open={open} scroll={scroll} setOpen={setOpen} />
-      <Filter open={openFilters} setOpen={setOpenFilters} setIsFiltered={setIsFiltered} />
+      <CreateUser open={open} scroll={scroll} setOpen={setOpen}/>
+      <CreateClient open={openCreateClientModal} scroll={scroll} setOpen={setOpenCreateClientModal}/>
+      <Filter open={openFilters} setOpen={setOpenFilters} setIsFiltered={setIsFiltered}/>
     </div>
   );
 };

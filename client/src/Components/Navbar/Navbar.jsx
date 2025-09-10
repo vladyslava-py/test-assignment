@@ -94,6 +94,8 @@ const StyledMenuItem = styled(MenuItem)(
     `
 );
 
+const timeZone = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
+
 const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
   /////////////////////////////////////////// VARIABLES ////////////////////////////////////////////
   const { loggedUser } = useSelector((state) => state.user);
@@ -113,7 +115,8 @@ const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
     return function cleanup() {
       clearInterval(timer);
     };
-  });
+  }, []);
+
   useEffect(() => {
     dispatch(getNotifications());
     dispatch(getTasks());
@@ -143,10 +146,14 @@ const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
               )}`}>
               <PiList className="text-[25px]" />
             </IconButton>
-            <div>
-              <p className="text-sky-400 text-xl gap-1 flex items-center">
-                <PiTimerLight className="text-[25px]" /> {date.toLocaleTimeString()}
+            <div className="flex items-center">
+              <p className="text-sky-400 text-xl gap-1 flex items-center tabular-nums">
+                <PiTimerLight className="text-[25px]"/>
+                {date.toLocaleTimeString()}
               </p>
+              <span className="ml-2 text-slate-400 font-normal text-xs">
+                 ({timeZone})
+              </span>
             </div>
           </div>
 

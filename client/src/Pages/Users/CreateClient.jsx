@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createEmployee } from "../../redux/action/user";
+import { createClient } from "../../redux/action/user";
 import {
   Divider,
   Dialog,
@@ -16,11 +16,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const CreateUser = ({ open, setOpen, scroll }) => {
+const CreateClient = ({ open, setOpen, scroll }) => {
   //////////////////////////////////////// VARIABLES /////////////////////////////////////
   const { isFetching } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const initialEmployeeState = {
+  const initialClientState = {
     firstName: "",
     lastName: "",
     username: "",
@@ -30,33 +30,34 @@ const CreateUser = ({ open, setOpen, scroll }) => {
   }
 
   //////////////////////////////////////// STATES /////////////////////////////////////
-  const [employeeData, setEmployeeData] = useState(initialEmployeeState);
+  const [clientData, setClientData] = useState(initialClientState);
   const [errors, setErrors] = useState({});
 
   //////////////////////////////////////// USE EFFECTS /////////////////////////////////////
 
   //////////////////////////////////////// FUNCTIONS /////////////////////////////////////
-  const validateEmployeeData = () => {
+  const validateClientData = () => {
     const newErrors = {};
-    if (!employeeData.firstName) newErrors.firstName = "First Name is required";
-    if (!employeeData.lastName) newErrors.lastName = "Last Name is required";
-    if (!employeeData.username) newErrors.username = "Username is required";
-    if (!employeeData.password) newErrors.password = "Password is required";
-    if (!employeeData.phone) newErrors.phone = "Phone number is required";
+    if (!clientData.firstName) newErrors.firstName = "First Name is required";
+    if (!clientData.lastName) newErrors.lastName = "Last Name is required";
+    if (!clientData.username) newErrors.username = "Username is required";
+    if (!clientData.email) newErrors.email = "Email is required";
+    if (!clientData.password) newErrors.password = "Password is required";
+    if (!clientData.phone) newErrors.phone = "Phone number is required";
     return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validateEmployeeData();
+    const validationErrors = validateClientData();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
     setErrors({});
-    dispatch(createEmployee(employeeData, setOpen));
-    setEmployeeData(initialEmployeeState);
+    dispatch(createClient(clientData, setOpen));
+    setClientData(initialClientState);
   };
 
   const handleChange = (e) => {
@@ -68,12 +69,12 @@ const CreateUser = ({ open, setOpen, scroll }) => {
       setErrors(newErrors);
     }
 
-    setEmployeeData((prevFilters) => ({ ...prevFilters, [name]: value, }));
+    setClientData((prevFilters) => ({ ...prevFilters, [name]: value, }));
   };
 
   const handleClose = () => {
     setOpen(false);
-    setEmployeeData(initialEmployeeState)
+    setClientData(initialClientState)
     setErrors({});
   };
 
@@ -89,7 +90,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
         maxWidth="sm"
         aria-describedby="alert-dialog-slide-description">
         <DialogTitle className="flex items-center justify-between">
-          <div className="text-sky-400 font-primary">Add New Employee</div>
+          <div className="text-sky-400 font-primary">Add New Client</div>
           <div className="cursor-pointer" onClick={handleClose}>
             <PiXLight className="text-[25px]" />
           </div>
@@ -98,7 +99,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
           <div className="flex flex-col gap-2 p-3 text-gray-500 font-primary">
             <div className="text-xl flex justify-start items-center gap-2 font-normal">
               <PiNotepad size={23} />
-              <span>Employee Details</span>
+              <span>Client Details</span>
             </div>
             <Divider />
             <table className="mt-4">
@@ -109,7 +110,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     name="firstName"
                     size="small"
                     fullWidth
-                    value={employeeData.firstName}
+                    value={clientData.firstName}
                     error={!!errors.firstName}
                     helperText={errors.firstName}
                     onChange={handleChange}
@@ -123,7 +124,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     name="lastName"
                     size="small"
                     fullWidth
-                    value={employeeData.lastName}
+                    value={clientData.lastName}
                     error={!!errors.lastName}
                     helperText={errors.lastName}
                     onChange={handleChange}
@@ -137,7 +138,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     name="username"
                     size="small"
                     fullWidth
-                    value={employeeData.username}
+                    value={clientData.username}
                     error={!!errors.username}
                     helperText={errors.username}
                     onChange={handleChange}
@@ -151,8 +152,9 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     name="email"
                     size="small"
                     fullWidth
-                    placeholder="Optional"
-                    value={employeeData.email}
+                    value={clientData.email}
+                    error={!!errors.email}
+                    helperText={errors.email}
                     onChange={handleChange}
                   />
                 </td>
@@ -163,7 +165,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                   <TextField
                     name="password"
                     type="password"
-                    value={employeeData.password}
+                    value={clientData.password}
                     error={!!errors.password}
                     helperText={errors.password}
                     onChange={handleChange}
@@ -179,7 +181,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     name="phone"
                     type="number"
                     size="small"
-                    value={employeeData.phone}
+                    value={clientData.phone}
                     error={!!errors.phone}
                     helperText={errors.phone}
                     onChange={handleChange}
@@ -193,14 +195,12 @@ const CreateUser = ({ open, setOpen, scroll }) => {
         <DialogActions>
           <button
             onClick={handleClose}
-            variant="contained"
             type="reset"
             className="bg-[#d7d7d7] px-4 py-2 rounded-lg text-gray-500 mt-4 hover:text-white hover:bg-[#6c757d] border-[2px] border-[#efeeee] hover:border-[#d7d7d7] font-thin transition-all">
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            variant="contained"
             className="bg-primary-red px-4 py-2 rounded-lg text-white mt-4 hover:bg-red-400 font-thin">
             {isFetching ? 'Submitting...' : 'Submit'}
           </button>
@@ -211,4 +211,4 @@ const CreateUser = ({ open, setOpen, scroll }) => {
   );
 };
 
-export default CreateUser;
+export default CreateClient;
